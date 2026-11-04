@@ -8,9 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.borrowed"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.borrowed"
@@ -62,13 +60,16 @@ dependencies {
     // --- added: Navigation between screens ---
     implementation("androidx.navigation:navigation-compose:2.8.5")
 
-    // --- added: Supabase (Auth + Postgrest + Realtime) ---
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.3")
-    implementation("io.github.jan-tennert.supabase:auth-kt:2.6.3")
-    implementation("io.github.jan-tennert.supabase:realtime-kt:2.6.3")
+    // --- Material Components (needed for XML Theme.MaterialComponents base theme) ---
+    implementation("com.google.android.material:material:1.12.0")
+
+    // --- added: Supabase (Auth + Postgrest + Realtime) via BOM ---
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.1"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:realtime-kt")
+    // Ktor engine (must match Ktor version used by supabase-kt 3.0.1 = Ktor 3.0.x)
     implementation("io.ktor:ktor-client-android:3.0.1")
-    implementation("io.ktor:ktor-client-core:3.0.1")
-    implementation("io.ktor:ktor-utils:3.0.1")
 
     // --- added: Room (local database) ---
     implementation("androidx.room:room-runtime:2.6.1")
