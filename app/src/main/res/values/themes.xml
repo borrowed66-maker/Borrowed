@@ -1,0 +1,11 @@
+<resources>
+    <style name="Theme.Borrowed" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">@color/borrowed_brand_green</item>
+        <item name="android:statusBarColor">@color/borrowed_brand_cream</item>
+        <item name="android:navigationBarColor">@color/borrowed_brand_cream</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>

@@ -13,28 +13,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.borrowed.app.ui.theme.BorrowedTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            BorrowedApp()
+            BorrowedTheme {
+                BorrowedApp()
+            }
         }
     }
 }
 
 @Composable
 fun BorrowedApp() {
-    MaterialTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            WelcomeScreen()
-        }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        WelcomeScreen()
     }
 }
 
@@ -48,14 +50,16 @@ fun WelcomeScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Borrowed",
-            style = MaterialTheme.typography.headlineLarge
+            text = stringResource(R.string.welcome_title),
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            text = "Keep track of the things you lend.",
+            text = stringResource(R.string.welcome_message),
             modifier = Modifier.padding(top = 8.dp),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
@@ -63,5 +67,7 @@ fun WelcomeScreen() {
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    BorrowedApp()
+    BorrowedTheme {
+        BorrowedApp()
+    }
 }
