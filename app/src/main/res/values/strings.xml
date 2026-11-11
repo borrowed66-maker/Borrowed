@@ -3,4 +3,9 @@
     <string name="welcome_title">Borrowed</string>
     <string name="welcome_message">Keep track of the things you lend.</string>
     <string name="app_description">A simple way to keep track of items you lend to others.</string>
+    <string name="add_edit_destination">Add or Edit Item</string>
+    <string name="settings_destination">Settings</string>
+    <string name="authentication_destination">Authentication</string>
+    <string name="navigation_placeholder_message">This screen will be developed in a later commit.</string>
+    <string name="back_button">Back</string>
 </resources>
