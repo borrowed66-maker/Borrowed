@@ -1,3 +1,6 @@
+
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,8 +8,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 
-// Read Supabase settings from local.properties so they are not hard-coded in source files.
-val localProperties = java.util.Properties()
+// Read Supabase settings from local.properties.
+val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProperties.load(it) }
@@ -28,6 +31,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
         buildConfigField("String", "SUPABASE_URL", supabaseUrl.asBuildConfigString())
         buildConfigField(
             "String",
@@ -41,16 +45,16 @@ android {
         buildConfig = true
     }
 
-
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+// Configure Kotlin outside the android block.
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
@@ -61,6 +65,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose:2.9.5")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 

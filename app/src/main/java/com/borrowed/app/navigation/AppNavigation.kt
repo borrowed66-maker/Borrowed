@@ -10,29 +10,66 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.borrowed.app.R
+import com.borrowed.app.ui.auth.AuthenticationScreen
+import com.borrowed.app.ui.auth.SessionLoadingScreen
+import com.borrowed.app.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
+    val authState by authViewModel.uiState.collectAsStateWithLifecycle()
+
+    if (authState.isCheckingSession) {
+        SessionLoadingScreen()
+        return
+    }
+
+    val startDestination = if (authState.isAuthenticated) {
+        AppRoutes.HOME
+    } else {
+        AppRoutes.AUTHENTICATION
+    }
+
     NavHost(
         navController = navController,
-        startDestination = AppRoutes.HOME
+        startDestination = startDestination
     ) {
+        composable(AppRoutes.AUTHENTICATION) {
+            AuthenticationScreen(
+                state = authState,
+                onEmailChange = authViewModel::onEmailChange,
+                onPasswordChange = authViewModel::onPasswordChange,
+                onConfirmPasswordChange = authViewModel::onConfirmPasswordChange,
+                onPasswordVisibilityChange = authViewModel::onPasswordVisibilityChange,
+                onConfirmPasswordVisibilityChange = authViewModel::onConfirmPasswordVisibilityChange,
+                onModeChange = authViewModel::onModeChange,
+                onSubmit = {
+                    if (authState.isSignUp) authViewModel.signUp() else authViewModel.signIn()
+                }
+            )
+        }
+
         composable(AppRoutes.HOME) {
             HomePlaceholder(
                 onAddItem = { navController.navigate(AppRoutes.ADD_EDIT_ITEM) },
                 onSettings = { navController.navigate(AppRoutes.SETTINGS) },
-                onAuthentication = { navController.navigate(AppRoutes.AUTHENTICATION) }
+                onSignOut = authViewModel::signOut
             )
         }
 
@@ -49,12 +86,23 @@ fun AppNavigation(
                 onBack = { navController.popBackStack() }
             )
         }
+    }
 
-        composable(AppRoutes.AUTHENTICATION) {
-            DestinationPlaceholder(
-                title = stringResource(R.string.authentication_destination),
-                onBack = { navController.popBackStack() }
-            )
+    // Keep the navigation stack in step with the current Supabase session.
+    LaunchedEffect(authState.isAuthenticated) {
+        val destination = if (authState.isAuthenticated) {
+            AppRoutes.HOME
+        } else {
+            AppRoutes.AUTHENTICATION
+        }
+
+        if (navController.currentDestination?.route != destination) {
+            navController.navigate(destination) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
         }
     }
 }
@@ -63,7 +111,7 @@ fun AppNavigation(
 private fun HomePlaceholder(
     onAddItem: () -> Unit,
     onSettings: () -> Unit,
-    onAuthentication: () -> Unit
+    onSignOut: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -90,8 +138,9 @@ private fun HomePlaceholder(
         Button(onClick = onSettings) {
             Text(text = stringResource(R.string.settings_destination))
         }
-        Button(onClick = onAuthentication) {
-            Text(text = stringResource(R.string.authentication_destination))
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onSignOut) {
+            Text(text = "Sign out")
         }
     }
 }
