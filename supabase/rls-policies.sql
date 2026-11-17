@@ -4,6 +4,7 @@
 -- Ensure Row-Level Security remains enabled.
 alter table public.borrowed_items enable row level security;
 
+-- Remove the policies first so this script can safely be run again.
 drop policy if exists "Users can view their own borrowed items"
     on public.borrowed_items;
 drop policy if exists "Users can insert their own borrowed items"

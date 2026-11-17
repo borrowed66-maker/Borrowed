@@ -3,6 +3,7 @@ package com.borrowed.app.data.remote
 import com.borrowed.app.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.postgrest.Postgrest
 
 /**
  * Provides one shared Supabase client for the app.
@@ -25,6 +26,7 @@ object SupabaseClientProvider {
             supabaseKey = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         ) {
             install(Auth)
+            install(Postgrest)
         }
     }
 }

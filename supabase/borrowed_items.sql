@@ -26,6 +26,4 @@ create table if not exists public.borrowed_items (
 create index if not exists borrowed_items_user_id_idx
     on public.borrowed_items (user_id);
 
--- Keep the table closed to API access until the user policies
--- are added in Commit 7.
 alter table public.borrowed_items enable row level security;

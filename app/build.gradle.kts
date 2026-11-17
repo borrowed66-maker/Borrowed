@@ -72,6 +72,7 @@ dependencies {
     // Supabase client and authentication.
     implementation(platform("io.github.jan-tennert.supabase:bom:3.2.5"))
     implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:3.0.3")
 
     // Required by Supabase Kotlin when keeping the app minimum SDK at 24.
