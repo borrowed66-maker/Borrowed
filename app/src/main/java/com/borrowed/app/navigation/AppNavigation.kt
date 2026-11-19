@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.borrowed.app.R
 import com.borrowed.app.ui.auth.AuthenticationScreen
 import com.borrowed.app.ui.auth.SessionLoadingScreen
+import com.borrowed.app.ui.item.AddEditItemScreen
 import com.borrowed.app.ui.viewmodel.AuthViewModel
 
 @Composable
@@ -74,9 +75,9 @@ fun AppNavigation(
         }
 
         composable(AppRoutes.ADD_EDIT_ITEM) {
-            DestinationPlaceholder(
-                title = stringResource(R.string.add_edit_destination),
-                onBack = { navController.popBackStack() }
+            AddEditItemScreen(
+                onSave = { /* Supabase saving is connected in Commit 10. */ },
+                onCancel = { navController.popBackStack() }
             )
         }
 
